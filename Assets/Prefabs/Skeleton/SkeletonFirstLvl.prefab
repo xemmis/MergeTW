@@ -780,8 +780,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2431727622550615743}
   - component: {fileID: 6180208666884686669}
-  - component: {fileID: 815044205964891707}
-  - component: {fileID: 7343685860359855418}
+  - component: {fileID: -3981418128006264332}
+  - component: {fileID: -5725716645007138373}
   m_Layer: 6
   m_Name: SkeletonFirstLvl
   m_TagString: Untagged
@@ -830,7 +830,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!65 &815044205964891707
+--- !u!65 &-3981418128006264332
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -851,7 +851,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7343685860359855418
+--- !u!114 &-5725716645007138373
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -863,9 +863,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6225398cac6b339408b4ade3f8e70b73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skeletonData: {fileID: 11400000, guid: 8975d2f69ce2bbd4bad8635a907531da, type: 2}
+  _skeletonData: {fileID: 11400000, guid: 4b07d66b38122d9429067a8b49d1e2c9, type: 2}
   _currentSpawner: {fileID: 0}
   _isSelectable: 1
+  _boxCollider: {fileID: -3981418128006264332}
 --- !u!1 &6635623886118952182
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a018d1f23bc08e4d99b3e610a21b3e3, type: 3}
-  m_Name: Level2
+  m_Script: {fileID: 11500000, guid: e797dc12af95fb947b255c5b9e959cce, type: 3}
+  m_Name: SkeletonLvl4
   m_EditorClassIdentifier: 
-  Level: 2
+  Level: 4
   Health: 0
   Damage: 0
-  Prefab: {fileID: 0}
+  Prefab: {fileID: 5449274363990065789, guid: 4f4f44d877df9514582bb9854b166dab, type: 3}

@@ -3,13 +3,27 @@ using UnityEngine.Events;
 
 public class SpawnEventManager : MonoBehaviour
 {
-    public static UnityEvent OnBuySkeleton = new();
-    public static UnityEvent OnCellSkeleton = new();
-    public static UnityEvent<Skeleton, Skeleton, Spawner> OnSkeletonMerge = new();
+    public UnityEvent<int> OnBuySkeleton = new();
+    public UnityEvent OnCellSkeleton = new();
+    public UnityEvent<BaseNpc, BaseNpc> OnSkeletonMerge = new();
 
-    public void BuySkeleton()
+    public static SpawnEventManager SpawnEventInstance;
+
+    private void Awake()
     {
-        OnBuySkeleton?.Invoke();
+        if (SpawnEventManager.SpawnEventInstance == null)
+        {
+            SpawnEventManager.SpawnEventInstance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public void BuySkeleton(NpsData skeletonData)
+    {
+        OnBuySkeleton?.Invoke(skeletonData.Level);
     }
 
     public void SellSkeleton()
@@ -20,6 +34,7 @@ public class SpawnEventManager : MonoBehaviour
     private void OnDestroy()
     {
         OnBuySkeleton = null;
+        OnCellSkeleton = null;
         OnCellSkeleton = null;
     }
 }

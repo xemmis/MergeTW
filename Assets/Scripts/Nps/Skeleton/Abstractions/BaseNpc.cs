@@ -1,16 +1,19 @@
 using UnityEngine;
 
-public abstract class Skeleton : MonoBehaviour, ISkeletonSelectHandler
+[RequireComponent(typeof(Collider))]
+public abstract class BaseNpc : MonoBehaviour, ISelectable
 {
-    [SerializeField] private SkeletonData _skeletonData = null;
+    [SerializeField] private NpsData _skeletonData = null;
     [SerializeField] private Spawner _currentSpawner = null;
     [SerializeField] private bool _isSelectable = true;
+    [SerializeField] private Collider _boxCollider = null;
     private Vector3 _startDragPosition = new();
     public bool IsSelectable => _isSelectable && gameObject.activeInHierarchy;
 
     public void OnDragStart()
     {
         _startDragPosition = transform.position;
+        print("start");
     }
 
     public void OnDragUpdate(Vector3 worldPosition)
@@ -38,11 +41,11 @@ public abstract class Skeleton : MonoBehaviour, ISkeletonSelectHandler
         {
             Collider collider = nearbyColliders[i];
 
-            if (collider.gameObject.TryGetComponent<Skeleton>(out var skeleton))
+            if (collider.gameObject.TryGetComponent<BaseNpc>(out var skeleton))
             {
                 if (skeleton != this)
                 {
-                    SpawnEventManager.OnSkeletonMerge.Invoke(this, skeleton, skeleton.GetSpawner());
+                    SpawnEventManager.SpawnEventInstance.OnSkeletonMerge.Invoke(this, skeleton);
                     transform.position = _startDragPosition;
                     return;
                 }
@@ -65,21 +68,21 @@ public abstract class Skeleton : MonoBehaviour, ISkeletonSelectHandler
         transform.position = _startDragPosition;
     }
 
-    public SkeletonData GetData()
+    public NpsData GetData()
     {
         if (_skeletonData == null)
         {
-            throw new System.ArgumentNullException(nameof(SkeletonData), "SkeletonData is null on GetData");
+            throw new System.ArgumentNullException(nameof(NpsData), "SkeletonData is null on GetData");
         }
 
         return _skeletonData;
     }
 
-    public void SetData(SkeletonData skeletonData)
+    public void SetData(NpsData skeletonData)
     {
         if (_currentSpawner == null)
         {
-            throw new System.ArgumentNullException(nameof(SkeletonData), "recieved SkeletonData is null on SetData");
+            throw new System.ArgumentNullException(nameof(NpsData), "recieved SkeletonData is null on SetData");
         }
 
         _skeletonData = skeletonData;
@@ -97,11 +100,6 @@ public abstract class Skeleton : MonoBehaviour, ISkeletonSelectHandler
 
     public void SetSpawner(Spawner spawner)
     {
-        if (spawner == null)
-        {
-            throw new System.ArgumentNullException(nameof(Spawner), "Spawner is null on SetSpawner");
-        }
-
         _currentSpawner = spawner;
     }
 }

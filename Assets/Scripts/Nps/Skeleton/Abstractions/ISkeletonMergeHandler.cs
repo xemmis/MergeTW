@@ -1,4 +1,4 @@
 public interface ISkeletonMergeHandler
 {
-    bool TryMergeWith(Skeleton firstSkeleton, Skeleton SecondSkeleton);
+    void TryMergeWith(BaseNpc firstSkeleton, BaseNpc SecondSkeleton);
 }

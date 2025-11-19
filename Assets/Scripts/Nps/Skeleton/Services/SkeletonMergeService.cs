@@ -3,31 +3,49 @@ using UnityEngine;
 
 public class SkeletonMergeService : MonoBehaviour, ISkeletonMergeHandler
 {
-    [field: SerializeField] public SkeletonData SkeletonData { get; private set; } = null;
     private SpawnManager _spawnManager;
-    private ISkeletonConfigurator _skeletonConfigurator;
+    private SpawnEventManager _spawnEventManager;
 
-    private void Awake()
+    private void Start()
     {
         if (SpawnManager.SpawnManagerInstance != null)
         {
             _spawnManager = SpawnManager.SpawnManagerInstance;
         }
+
+        if (SpawnEventManager.SpawnEventInstance != null)
+        {
+            _spawnEventManager = SpawnEventManager.SpawnEventInstance;
+        }
+
+        _spawnEventManager?.OnSkeletonMerge.AddListener(TryMergeWith);
     }
 
-    public bool TryMergeWith(Skeleton firstSkeleton, Skeleton SecondSkeleton)
+    private void OnDestroy()
+    {
+        _spawnEventManager?.OnSkeletonMerge.RemoveListener(TryMergeWith);
+    }
+
+    public void TryMergeWith(BaseNpc firstSkeleton, BaseNpc SecondSkeleton)
     {
         if (firstSkeleton.GetData().Level != SecondSkeleton.GetData().Level || firstSkeleton == SecondSkeleton)
         {
-            return false;
+            return;
         }
 
-        _spawnManager.SpawnMergedSkeleton(SecondSkeleton.GetData(), SecondSkeleton.GetSpawner());
-        return true;
-    }
-}
 
-public interface ISkeletonConfigurator
-{
-    void Configure(SkeletonData skeletonData);
+        Spawner spawner = SecondSkeleton.GetSpawner();
+        int requiredLvl = SecondSkeleton.GetData().Level + 1;
+        if (_spawnManager.Factories.TryGetValue(typeof(BaseNpc), out object factoryObj))
+        {
+            var factory = factoryObj as INpsFabric;
+            if (factory.CanCreateLevel(requiredLvl))
+            {
+                _spawnManager.ReturnToPool<BaseNpc>(firstSkeleton);
+                _spawnManager.ReturnToPool<BaseNpc>(SecondSkeleton);
+                _spawnManager.SpawnSkeleton(spawner, requiredLvl);
+            }
+            return;
+        }
+    }
 }

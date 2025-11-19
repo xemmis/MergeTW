@@ -1,27 +1,54 @@
+using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
-public class SkeletonFabric : INpsFabric, IReturnToPool<Skeleton>
+public class SkeletonFabric : INpsFabric, IReturnToPool<BaseNpc>
 {
-    private ObjectPool<Skeleton> _skeletonPool;
+    private Dictionary<int, ObjectPool<BaseNpc>> _poolsByLevel = new();
+    private Dictionary<int, NpsData> _dataByLevel = new();
+    private INpsConfigurator<BaseNpc> _configurator;
 
-    public SkeletonFabric(Skeleton npsPrefab)
+    public SkeletonFabric(List<NpsData> skeletonData, INpsConfigurator<BaseNpc> configurator)
     {
-        _skeletonPool = new ObjectPool<Skeleton>(npsPrefab, 10);
+        foreach (var data in skeletonData)
+        {
+            _dataByLevel[data.Level] = data;
+            _poolsByLevel[data.Level] = new ObjectPool<BaseNpc>(data.Prefab, 5);
+        }
+        if (configurator == null)
+        {
+            throw new System.ArgumentNullException(nameof(configurator), "Configuraton is null on Constructor");
+        }
+        _configurator = configurator;
     }
 
-    public GameObject CreateNps(Spawner spawner)
+    public GameObject CreateNpc(Spawner spawner, int level = 1)
     {
-        if (spawner == null) return null;
+        if (!_poolsByLevel.ContainsKey(level) || spawner == null)
+        {
+            return null;
+        }
 
-        Skeleton skeleton = _skeletonPool.Get();
+        BaseNpc skeleton = _poolsByLevel[level].Get();
         skeleton.gameObject.SetActive(true);
         skeleton.transform.position = spawner.transform.position;
-        skeleton.SetSpawner(spawner);
+        _configurator.Configure(skeleton, skeleton.GetData(), spawner);
+        
         return skeleton.gameObject;
     }
 
-    public void ReturnToPool(Skeleton component)
+    public bool CanCreateLevel(int level)
     {
-        _skeletonPool?.Return(component);
+        return _poolsByLevel.ContainsKey(level);
+    }
+
+    public void ReturnToPool(BaseNpc component)
+    {
+        int level = component.GetData().Level;
+        if (_poolsByLevel.ContainsKey(level))
+        {
+            _configurator.Reset(component);
+            _poolsByLevel[level].Return(component);
+        }
     }
 }
