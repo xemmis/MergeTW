@@ -39,7 +39,7 @@ public abstract class NpcBehaviorLogic : MonoBehaviour
     public void RotateTowards(Vector3 targetPosition)
     {
         Vector3 direction = (targetPosition - transform.position).normalized;
-        direction.y = 0; // Игнорируем высоту
+        direction.y = 0; 
         if (direction != Vector3.zero)
         {
             transform.rotation = Quaternion.LookRotation(direction);

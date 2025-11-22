@@ -16,14 +16,9 @@ public class DragController : MonoBehaviour, IDragController
         _isDragging = true;
 
         var transform = ((MonoBehaviour)_draggedObject).transform;
-
-        // Сохраняем оригинальную Z позицию (глубину)
         _originalZPosition = transform.position.z;
-
-        // Создаем вертикальную плоскость для перетаскивания на уровне объекта по Z
         _dragPlane = new Plane(Vector3.forward, new Vector3(0, 0, _originalZPosition));
 
-        // Вычисляем смещение от точки касания до центра объекта
         Ray ray = _mainCamera.ScreenPointToRay(screenPosition);
         if (_dragPlane.Raycast(ray, out float enter))
         {
@@ -42,7 +37,6 @@ public class DragController : MonoBehaviour, IDragController
         if (_dragPlane.Raycast(ray, out float enter))
         {
             Vector3 worldPosition = ray.GetPoint(enter) + _dragOffset;
-            // Сохраняем оригинальную Z позицию (глубину)
             worldPosition.z = _originalZPosition;
             _draggedObject.OnDragUpdate(worldPosition);
         }
@@ -56,7 +50,6 @@ public class DragController : MonoBehaviour, IDragController
         if (_dragPlane.Raycast(ray, out float enter))
         {
             Vector3 worldPosition = ray.GetPoint(enter) + _dragOffset;
-            // Сохраняем оригинальную Z позицию (глубину)
             worldPosition.z = _originalZPosition;
             _draggedObject.OnDragEnd(worldPosition);
         }

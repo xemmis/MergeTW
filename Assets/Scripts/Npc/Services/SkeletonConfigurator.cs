@@ -11,9 +11,3 @@ public class SkeletonConfigurator : INpsConfigurator<SkeletonBehaviorLogic>
         npc.GetNpc().SetSpawner(null);
     }
 }
-
-
-
-
-
-

@@ -79,7 +79,6 @@ public abstract class BaseNpcFabric<T> : MonoBehaviour, INpcFabric<T> where T : 
 
     public virtual void ReturnNpc(T component)
     {
-        // Наследники должны реализовать получение уровня
         int level = GetNpcLevel(component);
 
         if (_poolsByLevel.TryGetValue(level, out ObjectPool<T> pool))
@@ -96,10 +95,8 @@ public abstract class BaseNpcFabric<T> : MonoBehaviour, INpcFabric<T> where T : 
         _currentNpc.Remove(component);
     }
 
-    // Абстрактный метод - наследники знают как получить уровень своего NPC
     public abstract int GetNpcLevel(T npc);
 
-    // Дополнительные общие методы
     public virtual bool CanSpawnNpc(int level)
     {
         NpcData data = _npcData.Find(npc => npc.Level == level);

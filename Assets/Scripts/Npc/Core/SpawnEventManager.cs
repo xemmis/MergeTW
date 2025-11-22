@@ -2,14 +2,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawnEventManager : MonoBehaviour
-{
-    
+{    
     private void Awake()
     {
         _mergeHandler = new MergeHandler();
     }
-
-
     #region SkeletonSpawn
     private MergeHandler _mergeHandler = new();
     [SerializeField] private List<Spawner> _spawners = new();
@@ -41,13 +38,4 @@ public class SpawnEventManager : MonoBehaviour
         SpawnManager.ReturnNpc<SkeletonBehaviorLogic>(npcBehaviorLogic);
     }
     #endregion
-    #region EnemySpawn
-    [SerializeField] private Spawner _enemySpawner = null;
-
-    public void SpawnEnemy(int level = 1)
-    {
-       // SpawnManager.SpawnNpc<SkeletonBehaviorLogic>(_enemySpawner,)
-    }
-    #endregion
-
 }
