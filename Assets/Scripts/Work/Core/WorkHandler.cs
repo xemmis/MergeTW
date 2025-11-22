@@ -7,6 +7,7 @@ public class WorkHandler : MonoBehaviour
     [SerializeField] private SkeletonBehaviorLogic _worker = null;
     [SerializeField] private SkeletonConfigurator _skeletonConfigurator = null;
     [SerializeField] private WorkType _workType = WorkType.Other;
+    private Coroutine _workRoutine = null;
     private int _earnTick = 5;
     private int _earnAmount = 5;
 
@@ -21,6 +22,7 @@ public class WorkHandler : MonoBehaviour
         {
             _worker.GetSelectable().IsSelectable = true;
             _skeletonConfigurator.Configure(_worker, _worker.GetNpcData(), newWorker.GetNpc().GetSpawner());
+            StopCoroutine(_workRoutine);
         }
         else
         {
@@ -35,7 +37,7 @@ public class WorkHandler : MonoBehaviour
 
         _skeletonConfigurator.Configure(newWorker, newWorker.GetNpcData(), _positionToWork);
         _worker.ChangeState(new WorkState(_workType));
-        StartCoroutine(EarnTick());
+        _workRoutine = StartCoroutine(EarnTick());
     }
 
     private IEnumerator EarnTick()
@@ -45,7 +47,7 @@ public class WorkHandler : MonoBehaviour
 
         if (_worker != null)
         {
-            StartCoroutine(EarnTick());
+            _workRoutine = StartCoroutine(EarnTick());
         }
     }
 }

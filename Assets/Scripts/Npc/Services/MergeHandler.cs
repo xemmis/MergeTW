@@ -7,7 +7,11 @@ public class MergeHandler
             Spawner spawner = second.GetNpc().GetSpawner();
             int requiredLevel = second.GetNpcData().Level + 1;
 
-            SpawnManager.MergeNpc<SkeletonBehaviorLogic>(spawner, requiredLevel);
+            SkeletonBehaviorLogic skeleton = SpawnManager.MergeNpc<SkeletonBehaviorLogic>(spawner, requiredLevel);
+            if (skeleton == null)
+            {
+                return;
+            }
 
             first.GetNpc().GetSpawner().SetStatus(false);
 

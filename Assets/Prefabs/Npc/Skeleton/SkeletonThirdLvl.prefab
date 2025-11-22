@@ -871,6 +871,7 @@ GameObject:
   - component: {fileID: 7480028116556451924}
   - component: {fileID: 680191072792877157}
   - component: {fileID: 4804096799256904987}
+  - component: {fileID: -2182806470929924957}
   m_Layer: 6
   m_Name: SkeletonThirdLvl
   m_TagString: Untagged
@@ -988,6 +989,33 @@ MonoBehaviour:
   _boxCollider: {fileID: 5774513286332963810}
   _detectionRange: 2
   _attackRange: 1
+--- !u!54 &-2182806470929924957
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4025853738519965969}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 120
+  m_CollisionDetection: 0
 --- !u!1 &5045568046951565786
 GameObject:
   m_ObjectHideFlags: 0

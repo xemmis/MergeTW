@@ -15,6 +15,6 @@ MonoBehaviour:
   Cost: 1000
   Level: 2
   EarnPerTick: 13
-  EarnTick: 2
+  EarnTick: 10
   Prefab: {fileID: 8431780964335553011, guid: 315f6e0606673c24fbaab91d341a38a8, type: 3}
   UseCostOnSpawn: 0
