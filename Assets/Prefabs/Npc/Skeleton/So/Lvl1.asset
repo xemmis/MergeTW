@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad4b5b55c46106e4081ee4f6fef6684c, type: 3}
+  m_Name: Lvl1
+  m_EditorClassIdentifier: 
+  Cost: 20
+  Level: 1
+  EarnPerTick: 8
+  EarnTick: 2
+  Prefab: {fileID: 2091224292121225690, guid: 25fcf57631367f346ba8fc4cd793a499, type: 3}
+  UseCostOnSpawn: 1

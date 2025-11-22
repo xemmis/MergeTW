@@ -7,7 +7,7 @@ public class DragController : MonoBehaviour, IDragController
     private bool _isDragging = false;
     private Plane _dragPlane;
     private Vector3 _dragOffset;
-    private float _originalYPosition;
+    private float _originalZPosition;
 
     #region IDragController
     public void StartDrag(ISelectable selectable, Vector2 screenPosition)
@@ -17,11 +17,11 @@ public class DragController : MonoBehaviour, IDragController
 
         var transform = ((MonoBehaviour)_draggedObject).transform;
 
-        // Сохраняем оригинальную Y позицию (высоту)
-        _originalYPosition = transform.position.y;
+        // Сохраняем оригинальную Z позицию (глубину)
+        _originalZPosition = transform.position.z;
 
-        // Создаем горизонтальную плоскость для перетаскивания на уровне объекта
-        _dragPlane = new Plane(Vector3.up, new Vector3(0, _originalYPosition, 0));
+        // Создаем вертикальную плоскость для перетаскивания на уровне объекта по Z
+        _dragPlane = new Plane(Vector3.forward, new Vector3(0, 0, _originalZPosition));
 
         // Вычисляем смещение от точки касания до центра объекта
         Ray ray = _mainCamera.ScreenPointToRay(screenPosition);
@@ -42,8 +42,8 @@ public class DragController : MonoBehaviour, IDragController
         if (_dragPlane.Raycast(ray, out float enter))
         {
             Vector3 worldPosition = ray.GetPoint(enter) + _dragOffset;
-            // Сохраняем оригинальную Y позицию (высоту)
-            worldPosition.y = _originalYPosition;
+            // Сохраняем оригинальную Z позицию (глубину)
+            worldPosition.z = _originalZPosition;
             _draggedObject.OnDragUpdate(worldPosition);
         }
     }
@@ -56,8 +56,8 @@ public class DragController : MonoBehaviour, IDragController
         if (_dragPlane.Raycast(ray, out float enter))
         {
             Vector3 worldPosition = ray.GetPoint(enter) + _dragOffset;
-            // Сохраняем оригинальную Y позицию (высоту)
-            worldPosition.y = _originalYPosition;
+            // Сохраняем оригинальную Z позицию (глубину)
+            worldPosition.z = _originalZPosition;
             _draggedObject.OnDragEnd(worldPosition);
         }
 
