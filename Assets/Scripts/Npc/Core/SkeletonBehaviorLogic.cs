@@ -1,9 +1,13 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class SkeletonBehaviorLogic : NpcBehaviorLogic
+public class SkeletonBehaviorLogic : NpcBehaviorLogic, IInteractable
 {
     private MergeHandler _mergeHandler = null;
     private ISelectable _selectable = null;
+    [SerializeField] private float _interactionRadius = 0.35f;
+
+    private List<IInteractable> _interactables = new List<IInteractable>();
 
     protected override void Awake()
     {
@@ -20,13 +24,13 @@ public class SkeletonBehaviorLogic : NpcBehaviorLogic
 
         _selectable = GetComponent<ISelectable>();
         _selectable?.OnDrag.AddListener(HandleDrag);
-        _selectable?.OnDragFinish.AddListener(CheckInteractionsAtPosition);
+        _selectable?.OnDragFinish.AddListener(CheckInteractions);
     }
 
     private void OnDestroy()
     {
         _selectable?.OnDrag.RemoveListener(HandleDrag);
-        _selectable?.OnDragFinish.RemoveListener(CheckInteractionsAtPosition);
+        _selectable?.OnDragFinish.RemoveListener(CheckInteractions);
     }
 
     private void HandleDrag()
@@ -35,55 +39,66 @@ public class SkeletonBehaviorLogic : NpcBehaviorLogic
         return;
     }
 
-    private void CheckInteractionsAtPosition(Vector3 position)
+    public void CheckInteractions(Vector3 position)
     {
-        Collider[] nearbyColliders = new Collider[10];
-        int colliderCount = Physics.OverlapSphereNonAlloc(position, .35f, nearbyColliders);
+        FindInteractables(position);
 
-        for (int i = 0; i < colliderCount; i++)
+        foreach (var interactable in _interactables)
         {
-            Collider collider = nearbyColliders[i];
-
-            if (collider.gameObject.TryGetComponent<SkeletonBehaviorLogic>(out var npc))
-            {
-                if (npc != this)
-                {
-                    ChangeState(new IdleState());
-                    _mergeHandler.HandleMerge(this, npc);
-                }
-            }
-
-            if (collider.TryGetComponent<WorkHandler>(out var workHandler))
-            {
-                workHandler.HandleWork(this);
+            if (interactable.TryInteract(this))
                 return;
-            }
+        }
 
-            if (collider.TryGetComponent<Spawner>(out var spawner) && !spawner.IsOccupied())
+        ReturnToStartPosition();
+    }
+
+    private void FindInteractables(Vector3 position)
+    {
+        _interactables.Clear();
+        Collider[] colliders = new Collider[5];
+        int count = Physics.OverlapSphereNonAlloc(position, _interactionRadius, colliders);
+
+        for (int i = 0; i < count; i++)
+        {
+            if (colliders[i].TryGetComponent<IInteractable>(out var interactable))
             {
-                Spawner currentSpawner = _currentNpc.GetSpawner();
-
-                if (currentSpawner != null)
-                {
-                    currentSpawner.SetStatus(false);
-                }
-
-                transform.position = spawner.transform.position;
-                _currentNpc.SetSpawner(spawner);
-                ChangeState(new IdleState());
-                return;
-            }
-
-            if (collider.TryGetComponent<ITrashCan>(out var trashCan))
-            {
-                trashCan.AbortSkeleton(this);
-                return;
+                _interactables.Add(interactable);
             }
         }
 
+        _interactables.Sort((a, b) => b.Priority.CompareTo(a.Priority));
+    }
+
+    private void ReturnToStartPosition()
+    {
         transform.position = _selectable.StartDragPosition;
         ChangeState(new IdleState());
     }
 
+    #region  IInteractable
+
+    public int Priority { get; private set; } = 40;
+
     public ISelectable GetSelectable() => _selectable;
+
+    public bool TryInteract(SkeletonBehaviorLogic skeleton)
+    {
+        if (skeleton.gameObject == gameObject)
+        {
+            return false;
+        }
+
+        ChangeState(new IdleState());
+        _mergeHandler.HandleMerge(skeleton, this);
+
+        return true;
+    }
+    #endregion
+}
+
+
+public interface IInteractable
+{
+    int Priority { get; }
+    bool TryInteract(SkeletonBehaviorLogic skeleton);
 }

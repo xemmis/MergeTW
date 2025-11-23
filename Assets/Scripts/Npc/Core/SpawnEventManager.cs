@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawnEventManager : MonoBehaviour
-{    
+{
     private void Awake()
     {
         _mergeHandler = new MergeHandler();
     }
     #region SkeletonSpawn
     private MergeHandler _mergeHandler = new();
+    [SerializeField] private SkeletonConfigurator _skeletonConfig = null;
     [SerializeField] private List<Spawner> _spawners = new();
 
     private Spawner GetFreeSpawner()

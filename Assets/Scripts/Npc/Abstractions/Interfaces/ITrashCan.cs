@@ -1,4 +1,4 @@
-public interface ITrashCan
+public interface ITrashCan : IInteractable
 {
     void AbortSkeleton(SkeletonBehaviorLogic skeleton);
 }
